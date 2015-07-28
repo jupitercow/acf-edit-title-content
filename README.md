@@ -6,7 +6,7 @@ Can be used to edit the title and content of posts in front end forms.
 
 This add-on will work with:
 
-* version 4 and up
+* version 4, it isn't needed with 5
 
 ## Installation
 
