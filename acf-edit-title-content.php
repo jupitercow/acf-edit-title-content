@@ -9,7 +9,7 @@
  * Plugin Name:       Advanced Custom Fields: Edit Title & Content
  * Plugin URI:        http://Jupitercow.com/
  * Description:       Allows an Advanced Custom Fields form to edit post_title and post_content in front-end forms.
- * Version:           1.1.0
+ * Version:           1.1.1
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -73,8 +73,6 @@ class Acf_Edit_Title_Content
 	 */
 	public function run()
 	{
-		if (! $this->test_requirements() ) { return false; }
-
 		$this->settings();
 
 		add_action( 'init',                   array($this, 'init') );
@@ -90,7 +88,7 @@ class Acf_Edit_Title_Content
 	public function test_requirements()
 	{
 		// Look for ACF
-		if (! class_exists('acf') ) { return false; }
+		if ( ! class_exists('acf') && ! class_exists('Acf') ) { return false; }
 		return true;
 	}
 
@@ -111,7 +109,6 @@ class Acf_Edit_Title_Content
 				
 			),
 		);
-		$this->settings = apply_filters( "{$this->prefix}/edit_title_content/settings", $this->settings );
 	}
 
 	/**
@@ -123,6 +120,10 @@ class Acf_Edit_Title_Content
 	 */
 	public function init()
 	{
+		if (! $this->test_requirements() ) { return false; }
+
+		$this->settings = apply_filters( "{$this->prefix}/edit_title_content/settings", $this->settings );
+
 		// Create the new object
 		add_filter( 'acf/pre_save_post', array($this, 'process_title_content'), 10 );
 		// Add a basic title/content interface for default use
@@ -227,6 +228,7 @@ class Acf_Edit_Title_Content
 		{
 			$args = array(
 				'id'              => 'acf_post-title-content',
+				'key'             => 'acf_post-title-content',
 				'title'           => apply_filters( "{$this->prefix}/edit_title_content/group/title", 'Post Title and Content' ),
 				'fields'          => array (),
 				'location'        => array (
@@ -252,6 +254,7 @@ class Acf_Edit_Title_Content
 			if ( apply_filters( "{$this->prefix}/edit_title_content/title/add", true ) )
 			{
 				$args['fields'][] = array (
+					'id'            => 'field_5232d86ba9246title',
 					'key'           => 'field_5232d86ba9246title',
 					'label'         => apply_filters( "{$this->prefix}/edit_title_content/title/title", 'Title' ),
 					'name'          => apply_filters( "{$this->prefix}/edit_title_content/title/name", 'form_post_title' ),
@@ -269,6 +272,7 @@ class Acf_Edit_Title_Content
 			if ( apply_filters( "{$this->prefix}/edit_title_content/content/add", true ) )
 			{
 				$args['fields'][] = array (
+					'id'            => 'field_5232d8daa9247content',
 					'key'           => 'field_5232d8daa9247content',
 					'label'         => apply_filters( "{$this->prefix}/edit_title_content/content/title", 'Content' ),
 					'name'          => apply_filters( "{$this->prefix}/edit_title_content/content/name", 'form_post_content' ),
